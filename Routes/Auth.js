@@ -3,6 +3,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../Models/user");
 
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_REFRESH = process.env.JWT_REFRESH_SECRET;
+
 const router = express.Router();
 
 router.post("/register",async(req,res)=>{
@@ -24,7 +27,7 @@ router.post("/register",async(req,res)=>{
   }
 });
 
-router.post("/login",async(req,res)=>{
+router.post("/api/auth/login",async(req,res)=>{
     try{
         const {email,password} = req.body;
 
@@ -32,15 +35,32 @@ router.post("/login",async(req,res)=>{
         if (!user) 
             return res.status(400).json({ msg: "Email introuvable" });
 
-        const isMatch = await bcrypt.compare(user.password,password); 
+        const isMatch = await bcrypt.compare(password,user.password); 
         if (!isMatch) return res.status(400).json({ msg: "Mot de passe incorrect" });
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const accesstoken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "15m" });
+        const refreshtoken = jwt.sign({ id: user._id }, JWT_REFRESH, { expiresIn: "7d" });
 
-        res.json({ token,user: {id: user_id, email: user.email}});
+        res
+        .cookie("refreshToken", refreshtoken, { httpOnly: true, secure: true, sameSite:"Strict"})
+        .json({ accesstoken,user: {id: user_id, email: user.email}});
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+})
+
+router.post("/refresh",async(req,res)=>{
+    const token = req.cookies.refreshtoken;
+    if (!token) return res.status(401).json({msg : "pas de refresh token"});
+
+    try{
+        const verified = jwt.verify(token, JWT_REFRESH);
+        const newAccessToken = jwt.sign({id : verified.id}, JWT_SECRET, {expiresIn: "15m"});
+        res.json({accesstoken: newAccessToken});
+    }
+    catch(err){
+        res.status(403).json({ msg: "Refresh token invalide" });
+    }
 })
 
 module.exports = router;

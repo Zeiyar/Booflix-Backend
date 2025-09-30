@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 function auth(req, res, next) {
-  const token = req.header("Authorization")?.split(" ")[1]; // "Bearer TOKEN"
+  const token = req.header("Authorization")?.split(" ")[1];
   if (!token) return res.status(401).json({ msg: "Pas de token, accès refusé" });
 
   try {
