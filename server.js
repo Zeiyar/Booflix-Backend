@@ -11,10 +11,6 @@ app.use(cookieParser());
 app.use(cors({ origin: "https://booflix.netlify.app", credentials: true }));
 app.use(express.json());
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
 // Routes
 app.use("/api/auth", authRoutes);
 

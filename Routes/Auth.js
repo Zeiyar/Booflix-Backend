@@ -27,7 +27,7 @@ router.post("/register",async(req,res)=>{
   }
 });
 
-router.post("/api/auth/login",async(req,res)=>{
+router.post("/login",async(req,res)=>{
     try{
         const {email,password} = req.body;
 
@@ -42,15 +42,15 @@ router.post("/api/auth/login",async(req,res)=>{
         const refreshtoken = jwt.sign({ id: user._id }, JWT_REFRESH, { expiresIn: "7d" });
 
         res
-        .cookie("refreshToken", refreshtoken, { httpOnly: true, secure: true, sameSite:"Strict"})
-        .json({ accesstoken,user: {id: user_id, email: user.email}});
+        .cookie("refreshToken", refreshtoken, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "Strict" })
+        .json({ accesstoken,user: {id: user._id, email: user.email}});
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 })
 
 router.post("/refresh",async(req,res)=>{
-    const token = req.cookies.refreshtoken;
+    const token = req.cookies.refreshToken;
     if (!token) return res.status(401).json({msg : "pas de refresh token"});
 
     try{
