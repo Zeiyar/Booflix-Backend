@@ -7,6 +7,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./Routes/Auth");
 const episodes = require("./Routes/Episode");
+const watchlist = require("./Routes/Watchlist");
 
 dotenv.config();
 const app = express();
@@ -43,6 +44,7 @@ app.get("/signed-url",async(req,res)=>{
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/episodes", episodes);
+app.use("/watchlist", watchlist);
 
 // Connexion MongoDB
 mongoose.connect(process.env.MONGO_URI)
