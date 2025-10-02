@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { S3Client, ListObjectsV2Command } = require=("@aws-sdk/client-s3") ;
+const { S3Client, ListObjectsV2Command } = require("@aws-sdk/client-s3") ;
 
 const s3 = new S3Client({
   region: process.env.B2_REGION,
