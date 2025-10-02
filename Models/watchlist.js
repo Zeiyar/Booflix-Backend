@@ -6,7 +6,7 @@ const WatchList = new mongoose.Schema({
     progress : { type: Number, default: 0 },
     poster : { type: String },
     title : { type: String },
-    updatedAt : { type: Date, default: Data.now }
+    updatedAt : { type: Date, default: Date.now }
 })
 
 module.exports = mongoose.model("watchlist",WatchList);
