@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
     });
 
     const data = await s3.send(cmd);
-    const files = data.Contents.map(file => file.Key); // note : Contents avec S majuscule et Key
+    const files = data.Contents.map(file => file.Key);
     res.json({ files });
   } catch (err) {
     console.error(err);

@@ -11,6 +11,11 @@ const episodes = require("./Routes/Episode");
 dotenv.config();
 const app = express();
 
+// Cookies
+app.use(cookieParser());
+app.use(cors({ origin: "https://booflix.netlify.app", credentials: true }));
+app.use(express.json());
+
 const s3 = new S3Client({
   region: process.env.B2_REGION,
   endpoint: process.env.B2_ENDPOINT,
@@ -34,11 +39,6 @@ app.get("/signed-url",async(req,res)=>{
     res.status(500).json({ error: "Failed to generate signed URL" });
   }
 })
-
-// Cookies
-app.use(cookieParser());
-app.use(cors({ origin: "https://booflix.netlify.app", credentials: true }));
-app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
