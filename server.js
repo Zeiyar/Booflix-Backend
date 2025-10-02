@@ -1,10 +1,10 @@
-const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./Routes/Auth");
 
+import express from "express";
 import dotenv from "dotenv";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
