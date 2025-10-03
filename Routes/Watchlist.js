@@ -6,7 +6,7 @@ router.post("/",async(req,res)=>{
     try{
     const { userId, file, progress, poster, title} = req.body;
     
-    await Watchlist.findOneAndUpdate(
+    const item = await Watchlist.findOneAndUpdate(
         { userId,file },
         { progress,poster,title, updatedAt: new Date() },
         { upsert: true, new : true},
