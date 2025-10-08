@@ -1,15 +1,15 @@
 const jwt = require("jsonwebtoken");
 
 function auth(req, res, next) {
-  const token = req.header("Authorization")?.split(" ")[1];
-  if (!token) return res.status(401).json({ msg: "Pas de token, accès refusé" });
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ msg: "Token manquant" });
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified.id;
+    req.userId = verified.id;
     next();
   } catch (err) {
-    res.status(400).json({ msg: "Token invalide" });
+    res.status(401).json({ msg: "Token invalide" });
   }
 }
 

@@ -47,7 +47,7 @@ router.post("/login",async(req,res)=>{
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-})
+});
 
 router.post("/refresh",async(req,res)=>{
     const token = req.cookies.refreshToken;
@@ -61,6 +61,31 @@ router.post("/refresh",async(req,res)=>{
     catch(err){
         res.status(403).json({ msg: "Refresh token invalide" });
     }
-})
+});
+
+router.put("/change-password",async(req,res)=>{
+  const {oldPassword,newPassword} = req.body;
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ msg: "Token manquant" });
+
+  try{
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) return res.status(404).json({ msg: "Utilisateur introuvable" });
+
+    const isMatch = await bcrypt.compare(oldPassword,user.password);
+    if(!isMatch) return res.status(400).json({ msg: "Ancien mot de passe incorrect" });
+    
+    const salt = bcrypt.genSalt(10);
+    const hashedPassword = bcrypt.hash(newPassword,salt);
+
+    user.password = hashedPassword;
+
+    await user.save();
+    res.status(200).json({message : "mdp changer avec succès"});
+  }catch(err){
+    return res.status(403).json({ msg: "Token invalide" });
+}
+});
 
 module.exports = router;

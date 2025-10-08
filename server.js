@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./Routes/Auth");
 const episodes = require("./Routes/Episode");
 const watchlist = require("./Routes/Watchlist");
+const subscription = require("./Routes/Subscription");
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,7 @@ const app = express();
 app.use(cookieParser());
 app.use(cors({ origin: "https://booflix.netlify.app", credentials: true }));
 app.use(express.json());
+app.set("trust proxy", true);
 
 const s3 = new S3Client({
   region: process.env.B2_REGION,
@@ -45,6 +47,7 @@ app.get("/signed-url",async(req,res)=>{
 app.use("/api/auth", authRoutes);
 app.use("/episodes", episodes);
 app.use("/watchlist", watchlist);
+app.use("/api/subscription", subscription);
 
 // Connexion MongoDB
 mongoose.connect(process.env.MONGO_URI)

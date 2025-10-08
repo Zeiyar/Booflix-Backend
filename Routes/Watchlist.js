@@ -7,8 +7,8 @@ router.post("/",async(req,res)=>{
     const { userId, file, progress, poster, title} = req.body;
     
     const item = await Watchlist.findOneAndUpdate(
-        { userId,file },
-        { progress,poster,title, updatedAt: new Date() },
+        { userId, title },
+        { progress,poster,file, updatedAt: new Date() },
         { upsert: true, new : true},
     );
 
@@ -26,5 +26,21 @@ router.get("/:userId",async(req,res)=>{
         res.status(500).json({error: err.message});
     } 
 });
+
+router.delete("/:userId/:id",async(req,res)=>{
+    try{
+        const {id} = req.params
+
+        const deleted = await Watchlist.findByIdAndDelete(id);
+
+        if (!deleted){
+            return res.status(404).json({message: "episode non trouvé"});
+        }
+        res.status(200).json({message: "delete successfully",deleted});
+    }
+    catch(err){
+        res.status(500).json({error: err.message});
+    } 
+})
 
 module.exports = router;
