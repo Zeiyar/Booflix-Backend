@@ -5,9 +5,11 @@ const Watchlist = require("../Models/watchlist");
 router.post("/",async(req,res)=>{
     try{
     const { userId, file, progress, poster, title} = req.body;
-    
+
+    const titled = title.split(".")[0].trim();
+
     const item = await Watchlist.findOneAndUpdate(
-        { userId, title },
+        { userId, titled },
         { progress,poster,file, updatedAt: new Date() },
         { upsert: true, new : true},
     );

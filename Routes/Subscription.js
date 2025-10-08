@@ -18,7 +18,7 @@ router.post("/create-checkout-session", auth, async (req, res) => {
     // Map plan to Stripe price IDs (définis-les sur ton compte Stripe)
     const priceIdByPlan = {
       Basic: process.env.STRIPE_PRICE_BASIC,
-      Plus: process.env.STRIPE_PRICE_PLUS,
+      Styled: process.env.STRIPE_PRICE_STYLED,
       Premium: process.env.STRIPE_PRICE_PREMIUM,
     };
     const priceId = priceIdByPlan[plan];
@@ -29,8 +29,8 @@ router.post("/create-checkout-session", auth, async (req, res) => {
       mode: "subscription", // ou "subscription" si tu veux abonnement récurrent
       line_items: [{ price: priceId, quantity: 1 }],
       metadata: { userId: req.userId, plan },
-      success_url: `${process.env.FRONTEND_URL}/subscribe/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.FRONTEND_URL}/subscribe/cancel`,
+      success_url: `${process.env.REACT_APP_FRONTEND_URL}/subscribe/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.REACT_APP_FRONTEND_URL}/subscribe/cancel`,
     });
 
     res.json({ url: session.url });
