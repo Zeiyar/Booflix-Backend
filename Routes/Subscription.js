@@ -2,7 +2,7 @@
 const express = require("express");
 const Stripe = require("stripe");
 const User = require("../Models/user");
-const auth = require("../middleware/AuthMiddleware");
+const auth = require("../Middleware/AuthMiddleware");
 const { ipLimitForPlan } = require("../utils/subscriptionUtils");
 
 const router = express.Router();
