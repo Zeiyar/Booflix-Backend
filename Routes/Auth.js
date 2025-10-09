@@ -38,8 +38,8 @@ router.post("/login",async(req,res)=>{
         const isMatch = await bcrypt.compare(password,user.password); 
         if (!isMatch) return res.status(400).json({ msg: "Mot de passe incorrect" });
 
-        const accesstoken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "15m" });
-        const refreshtoken = jwt.sign({ id: user._id }, JWT_REFRESH, { expiresIn: "7d" });
+        const accesstoken = jwt.sign({ id: user._id , tokenVersion: user.tokenVersion }, JWT_SECRET, { expiresIn: "15m" });
+        const refreshtoken = jwt.sign({ id: user._id , tokenVersion: user.tokenVersion }, JWT_REFRESH, { expiresIn: "7d" });
 
         res
         .cookie("refreshToken", refreshtoken, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "Strict" })
@@ -76,16 +76,25 @@ router.put("/change-password",async(req,res)=>{
     const isMatch = await bcrypt.compare(oldPassword,user.password);
     if(!isMatch) return res.status(400).json({ msg: "Ancien mot de passe incorrect" });
     
-    const salt = bcrypt.genSalt(10);
-    const hashedPassword = bcrypt.hash(newPassword,salt);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword,salt);
 
     user.password = hashedPassword;
 
+    user.tokenVersion += 1;
     await user.save();
-    res.status(200).json({message : "mdp changer avec succès"});
+
+    res.clearCookie("refreshToken");
+
+    res.status(200).json({message : "Mot de passe changé avec succès veuillez vous reconnectez"});  
   }catch(err){
     return res.status(403).json({ msg: "Token invalide" });
 }
 });
+
+router.post("/logout",(req,res)=>{
+  res.clearCookie("refreshToken");
+  return res.json({ msg: "Déconnecté avec succès" });
+})
 
 module.exports = router;

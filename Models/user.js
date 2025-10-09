@@ -9,7 +9,8 @@ const UserSchema = new mongoose.Schema({
             ipList : {type: [String],default:[]},
             createdAt : {type: Date, default: Date.now},
             },
-        }
+        },
+    tokenVersion: {type:Number , default:0},
 }, {timestamps:true});
 
 module.exports = mongoose.model("User",UserSchema);
