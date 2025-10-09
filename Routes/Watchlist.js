@@ -6,11 +6,11 @@ router.post("/",async(req,res)=>{
     try{
     const { userId, file, progress, poster, title} = req.body;
 
-    const titled = title.split(".").slice(0,2).join(".");
+    const titled = title.split(".")[0];
 
     const item = await Watchlist.findOneAndUpdate(
-        { userId, titled },
-        { progress,poster,file, updatedAt: new Date() },
+        { userId, titled,file },
+        { progress,poster, updatedAt: new Date() },
         { upsert: true, new : true},
     );
 
@@ -22,7 +22,7 @@ router.post("/",async(req,res)=>{
 
 router.get("/:userId",async(req,res)=>{
     try{
-        const list = await Watchlist.find({ userId: req.params.userId });
+        const list = await Watchlist.find({ userId: req.params.userId }).sort({updatedAt: -1});
         res.json(list);
     } catch(err){
         res.status(500).json({error: err.message});
