@@ -86,7 +86,7 @@ router.post("/create-checkout-session", auth, async (req, res) => {
 router.get("/session/:id", auth, async (req, res) => {
   const sessionId = req.params.id;
   try {
-    const session = await stripe.checkout.session.retrieve(sessionId);
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
     const userId = session.metadata.userId;
     const user = await User.findById(userId).select("subscription");
     if (!user) return res.status(404).json({ msg: "Utilisateur non trouvé" });
