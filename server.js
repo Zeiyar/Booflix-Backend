@@ -24,8 +24,12 @@ app.use(
   })
 );
 app.options(/.*/, cors());
-app.use(express.json());
 app.set("trust proxy", true);
+
+app.use("/api/subscription/webhook", subscription);
+
+app.use(express.json());
+
 
 const s3 = new S3Client({
   region: process.env.B2_REGION,
