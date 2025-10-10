@@ -81,11 +81,11 @@ router.post("/webhook", express.raw({ type: "application/json" }), async (req, r
  * Endpoint mock pour dev : simule un paiement réussi (NE PAS déployer en prod)
  * Body: { plan: "Basic" }
  */
-router.post("/session/:id", auth, async (req, res) => {
+router.get("/session/:id", auth, async (req, res) => {
   const sessionId = req.params.id;
   try {
     const session = await stripe.checkout.session.retrieve(sessionId);
-    const userId = await session.metadata.userId;
+    const userId = session.metadata.userId;
     const user = await User.findById(userId).select("subscription");
     if (!user) return res.status(404).json({ msg: "Utilisateur non trouvé" });
     res.json(user.subscription||{});
