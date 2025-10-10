@@ -81,18 +81,18 @@ router.post("/webhook", express.raw({ type: "application/json" }), async (req, r
  * Endpoint mock pour dev : simule un paiement réussi (NE PAS déployer en prod)
  * Body: { plan: "Basic" }
  */
-router.post("/mock-success", auth, async (req, res) => {
-  const { plan } = req.body;
+router.post("/session/:id", auth, async (req, res) => {
+  const sessionId = req.params.id;
   try {
-    const user = await User.findById(req.userId);
+    const session = await stripe.checkout.session.retrieve(sessionId);
+    const userId = await session.metadata.userId;
+    const user = await User.findById(userId).select("subscription");
     if (!user) return res.status(404).json({ msg: "Utilisateur non trouvé" });
-    user.subscription.plan = plan;
-    user.subscription.createdAt = new Date();
-    await user.save();
-    res.json({ msg: "Mock payment enregistré", subscription: user.subscription });
+    res.json(user.subscription||{});
   } catch (err) {
-    res.status(500).json({ msg: err.message });
-  }
+    console.error(err);
+    res.status(500).json({ msg: "Erreur récupération session" });
+    }
 });
 
 /**
