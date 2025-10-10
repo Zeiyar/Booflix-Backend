@@ -28,8 +28,8 @@ router.post("/create-checkout-session", auth, async (req, res) => {
       mode: "subscription", // ou "subscription" si tu veux abonnement récurrent
       line_items: [{ price: priceId, quantity: 1 }],
       metadata: { userId: req.userId, plan },
-      success_url: `${process.env.FRONTEND_URL}/subscribe/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.FRONTEND_URL}/subscribe/cancel`,
+      success_url: `${process.env.FRONTEND_URL}params?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.FRONTEND_URL}params?cancel=true`,
     });
 
     res.json({ url: session.url });
