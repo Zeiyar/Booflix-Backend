@@ -17,7 +17,7 @@ const app = express();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["https://booflix.netlify.app", "http://localhost:5173"], // pour Netlify + local
+    origin: ["https://booflix.netlify.app"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
