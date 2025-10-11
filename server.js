@@ -5,7 +5,7 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser"); // ✅ à ajouter
+const bodyParser = require("body-parser");
 const authRoutes = require("./Routes/Auth");
 const episodes = require("./Routes/Episode");
 const watchlist = require("./Routes/Watchlist");
@@ -32,10 +32,12 @@ app.set("trust proxy", true);
 // =========================
 // 🔹 WEBHOOK STRIPE (doit venir AVANT express.json())
 // =========================
+const bodyParser = require("body-parser");
+
 app.post(
   "/api/subscription/webhook",
-  bodyParser.raw({ type: "application/json" }), // ⚠️ pas express.json ici
-  require("./Routes/StripeWebhook") // 👉 tu mets ton code webhook dans un fichier séparé
+  bodyParser.raw({ type: "application/json" }),
+  require("./Routes/StripeWebhook")
 );
 
 // =========================
