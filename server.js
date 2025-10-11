@@ -32,7 +32,6 @@ app.set("trust proxy", true);
 // =========================
 // 🔹 WEBHOOK STRIPE (doit venir AVANT express.json())
 // =========================
-const bodyParser = require("body-parser");
 
 app.post(
   "/api/subscription/webhook",
