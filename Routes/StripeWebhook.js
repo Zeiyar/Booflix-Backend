@@ -34,6 +34,7 @@ module.exports = async (req, res) => {
       user.subscription.plan = plan;
       user.subscription.createdAt = new Date();
       user.subscription.status = "active";
+      user.subscription.stripeSubscriptionId = session.subscription;
       await user.save();
 
       console.log(`✅ Utilisateur ${user.email} abonné au plan ${plan}`);

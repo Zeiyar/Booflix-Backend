@@ -39,4 +39,28 @@ router.get("/", auth, async (req, res) => {
   res.json(user.subscription || {});
 });
 
+router.delete("/unsubscibe",auth,async(req,res)=>{
+  try{
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ msg: "Utilisateur non trouvé" });
+
+    if (user.subscription?.stripeSubscriptionId) {
+      await stripe.subscriptions.del(user.subscription.stripeSubscriptionId);
+    }
+
+    user.subscription = {
+      plan: "Free",
+      status: "inactive",
+      createdAt: new Date(),
+      ipList: []
+    };
+
+    await user.save();
+    res.json({ msg: "Désabonnement effectué", subscription: user.subscription });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Erreur lors du désabonnement" });
+  }
+});
+
 module.exports = router;

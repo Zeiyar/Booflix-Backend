@@ -7,7 +7,8 @@ const UserSchema = new mongoose.Schema({
         plan : {type: String, default:"Free"},
         ipList : {type: [String],default:[]},
         createdAt : {type: Date, default: Date.now},
-        status: { type: String, default: "inactive" }
+        status: { type: String, default: "inactive" },
+        stripeSubscriptionId: { type: String, default: null },
         },
     tokenVersion: {type:Number , default:0},
 }, {timestamps:true});
