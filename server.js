@@ -1,5 +1,5 @@
 const express = require("express");
-const dotenv = require("dotenv");
+
 const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const mongoose = require("mongoose");
@@ -11,7 +11,7 @@ const episodes = require("./Routes/Episode");
 const watchlist = require("./Routes/Watchlist");
 const subscription = require("./Routes/Subscription");
 
-dotenv.config();
+
 const app = express();
 
 // =========================
