@@ -4,11 +4,10 @@ const UserSchema = new mongoose.Schema({
     email : {type:String, required:true, unique:true},
     password : {type:String, required:true},
     subscription : {
-        type : {
-            plan : {type: String, default:"Free"},
-            ipList : {type: [String],default:[]},
-            createdAt : {type: Date, default: Date.now},
-            },
+        plan : {type: String, default:"Free"},
+        ipList : {type: [String],default:[]},
+        createdAt : {type: Date, default: Date.now},
+        status: { type: String, default: "inactive" }
         },
     tokenVersion: {type:Number , default:0},
 }, {timestamps:true});
