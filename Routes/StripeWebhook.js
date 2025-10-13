@@ -22,7 +22,13 @@ module.exports = async (req, res) => {
       }
 
       // Si jamais "subscription" n'existe pas encore
-      if (!user.subscription) user.subscription = {};
+      if (!user.subscription) {
+    user.subscription = {
+    plan: "Free",
+    status: "inactive",
+    createdAt: new Date()
+  };
+}
 
       user.subscription.plan = plan;
       user.subscription.createdAt = new Date();
