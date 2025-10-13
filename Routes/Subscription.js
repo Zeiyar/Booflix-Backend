@@ -39,9 +39,4 @@ router.get("/", auth, async (req, res) => {
   res.json(user.subscription || {});
 });
 
-router.get("/session/:id", auth, async (req, res) => {
-    const session = await stripe.checkout.sessions.retrieve(req.params.id);
-    res.json({ plan: session.metadata.plan, userId: session.metadata.userId });
-});
-
 module.exports = router;
